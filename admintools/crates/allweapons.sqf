@@ -1,5 +1,5 @@
-private ["LocalOrGlobal","spawnCrate"];
-LocalOrGlobal = _this select 0;
+private ["_LocalOrGlobal","_spawnCrate"];
+_LocalOrGlobal = _this select 0;
 
 // Name of this crate
 _crateName = "ALL Weapons/Items Crate";
@@ -47,24 +47,24 @@ _dir = getdir player;
 _pos = getposATL player;
 _pos = [(_pos select 0)+1*sin(_dir),(_pos select 1)+1*cos(_dir), (_pos select 2)];
 
-if(LocalOrGlobal == "local") then {
-	spawnCrate = _classname createVehicleLocal _pos;	
+if(_LocalOrGlobal == "local") then {
+	_spawnCrate = _classname createVehicleLocal _pos;	
 } else {
-	spawnCrate = createVehicle [_classname, _pos, [], 0, "CAN_COLLIDE"];
+	_spawnCrate = createVehicle [_classname, _pos, [], 0, "CAN_COLLIDE"];
 };
 
-spawnCrate setDir _dir;
-spawnCrate setposATL _pos;
+_spawnCrate setDir _dir;
+_spawnCrate setposATL _pos;
 			
 {
 	if(_x != "MeleeBaseBallBat") then{
-		spawnCrate addWeaponCargoGlobal [_x, 5];
+		_spawnCrate addWeaponCargoGlobal [_x, 5];
 	};
 } forEach weapons_list;
 
 {
 	if(_x != "AngelCookies") then{
-		spawnCrate addMagazineCargoGlobal [_x, 20];
+		_spawnCrate addMagazineCargoGlobal [_x, 20];
 	};
 } forEach magazines_list;
 
@@ -94,5 +94,5 @@ titleText [format[_crateName + " will disappear in %1 seconds.",SelectDelay],"PL
 sleep SelectDelay;
 
 // Delete crate after SelectDelay seconds
-deletevehicle spawnCrate;
+deletevehicle _spawnCrate;
 titleText [format[_crateName + " disappeared."],"PLAIN DOWN"]; titleFadeOut 4;
