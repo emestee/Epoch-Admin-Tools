@@ -71,28 +71,33 @@ _spawnCrate setposATL _pos;
 // Send text to spawner only
 titleText [format[_crateName + " spawned!"],"PLAIN DOWN"]; titleFadeOut 4;
 
+
+selectDelayAllWeapons=0;
 // Run delaymenu
 delaymenu = 
 [
 	["",true],
 	["Select delay", [-1], "", -5, [["expression", ""]], "1", "0"],
 	["", [-1], "", -5, [["expression", ""]], "1", "0"],
-	["30 seconds", [], "", -5, [["expression", "SelectDelay=30;DelaySelected=true;"]], "1", "1"],
-	["1 min", [], "", -5, [["expression", "SelectDelay=60;DelaySelected=true;"]], "1", "1"],
-	["3 min", [], "", -5, [["expression", "SelectDelay=180;DelaySelected=true;"]], "1", "1"],
-	["5 min", [], "", -5, [["expression", "SelectDelay=300;DelaySelected=true;"]], "1", "1"],
-	["10 min", [], "", -5, [["expression", "SelectDelay=600;DelaySelected=true;"]], "1", "1"],
-	["30 min", [], "", -5, [["expression", "SelectDelay=1800;DelaySelected=true;"]], "1", "1"],
+	["30 seconds", [], "", -5, [["expression", "selectDelayAllWeapons=30;"]], "1", "1"],
+	["1 min", [], "", -5, [["expression", "selectDelayAllWeapons=60;"]], "1", "1"],
+	["3 min", [], "", -5, [["expression", "selectDelayAllWeapons=180;"]], "1", "1"],
+	["5 min", [], "", -5, [["expression", "selectDelayAllWeapons=300;"]], "1", "1"],
+	["10 min", [], "", -5, [["expression", "selectDelayAllWeapons=600;"]], "1", "1"],
+	["30 min", [], "", -5, [["expression", "selectDelayAllWeapons=1800;"]], "1", "1"],
 	["", [-1], "", -5, [["expression", ""]], "1", "0"],
-	["No timer", [], "", -5, [["expression", "DelaySelected=false;"]], "1", "1"],
+	["No timer", [], "", -5, [["expression", "selectDelayAllWeapons=0;"]], "1", "1"],
 	["", [-1], "", -5, [["expression", ""]], "1", "0"]
 ];
 showCommandingMenu "#USER:delaymenu";
-WaitUntil{DelaySelected};
-DelaySelected=false;
-titleText [format[_crateName + " will disappear in %1 seconds.",SelectDelay],"PLAIN DOWN"]; titleFadeOut 4;
-sleep SelectDelay;
+WaitUntil{commandingMenu == ""};
 
-// Delete crate after SelectDelay seconds
-deletevehicle _spawnCrate;
-titleText [format[_crateName + " disappeared."],"PLAIN DOWN"]; titleFadeOut 4;
+if(selectDelayAllWeapons != 0) then {
+	titleText [format[_crateName + " will disappear in %1 seconds.",selectDelayAllWeapons],"PLAIN DOWN"]; titleFadeOut 4;
+	sleep selectDelayAllWeapons;
+	// Delete crate after selectDelayAllWeapons seconds
+	deletevehicle _spawnCrate;
+	titleText [format[_crateName + " disappeared."],"PLAIN DOWN"]; titleFadeOut 4;
+} else {
+	titleText [format[_crateName + " has no timer. Shoot it to destroy."],"PLAIN DOWN"]; titleFadeOut 4;
+};
